@@ -24,6 +24,7 @@
  */
 
 #include "bsp/board_api.h"
+#include "pico/cyw43_arch.h"
 
 #include "usb_descriptors.h"
 
@@ -50,6 +51,7 @@ void hid_task(void);
 /*------------- MAIN -------------*/
 int main(void) {
     board_init();
+    cyw43_arch_init();
 
     // init device stack on configured roothub port
     const tusb_rhport_init_t rh_init = {
@@ -256,10 +258,10 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id,
             if (kbd_leds & KEYBOARD_LED_CAPSLOCK) {
                 // Capslock On: disable blink, turn led on
                 blink_interval_ms = 0;
-                board_led_write(true);
+                cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, true);
             } else {
                 // Caplocks Off: back to normal blink
-                board_led_write(false);
+                cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, false);
                 blink_interval_ms = BLINK_MOUNTED;
             }
         }
@@ -282,6 +284,6 @@ void led_blinking_task(void) {
         return; // not enough time
     start_ms += blink_interval_ms;
 
-    board_led_write(led_state);
+    cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, led_state);
     led_state = 1 - led_state; // toggle
 }
