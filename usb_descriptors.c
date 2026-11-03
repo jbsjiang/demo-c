@@ -24,7 +24,6 @@
  */
 
 #include "bsp/board_api.h"
-#include "tusb.h"
 #include "usb_descriptors.h"
 
 /* A combination of interfaces must have a unique product id, since PC will save device driver after the first plug.
