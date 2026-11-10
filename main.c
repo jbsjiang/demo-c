@@ -53,6 +53,10 @@ int main(void) {
     board_init();
     cyw43_arch_init();
 
+    gpio_init(0);
+    gpio_set_dir(0, GPIO_IN);
+    gpio_pull_up(0);
+
     gpio_init(1);
     gpio_set_dir(1, GPIO_OUT);
 
@@ -67,7 +71,7 @@ int main(void) {
         tud_task(); // tinyusb device task
         led_blinking_task();
 
-        if (board_button_read()) {
+        if (!gpio_get(0)) {
             gpio_put(1, 1);
         } else {
             gpio_put(1, 0);
