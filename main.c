@@ -53,6 +53,9 @@ int main(void) {
     board_init();
     cyw43_arch_init();
 
+    gpio_init(1);
+    gpio_set_dir(1, GPIO_OUT);
+
     // init device stack on configured roothub port
     const tusb_rhport_init_t rh_init = {
         .role = TUSB_ROLE_DEVICE,
@@ -63,6 +66,12 @@ int main(void) {
     while (1) {
         tud_task(); // tinyusb device task
         led_blinking_task();
+
+        if (board_button_read()) {
+            gpio_put(1, 1);
+        } else {
+            gpio_put(1, 0);
+        }
 
         hid_task();
     }
